@@ -1,141 +1,90 @@
-import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { 
-  Users, 
-  Target, 
-  DollarSign, 
-  TrendingUp,
-  Plus,
-  Calendar,
-  ClipboardList,
-  Receipt
-} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Target, BarChart3, Users, MapPin } from "lucide-react";
 
 const Index = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  const stats = [
+  if (loading) {
+    return null;
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  const features = [
     {
-      title: 'Total Leads',
-      value: '0',
-      description: 'Active leads in pipeline',
-      icon: Users,
-      color: 'text-blue-600',
-    },
-    {
-      title: 'Deals Closed',
-      value: '0',
-      description: 'This month',
       icon: Target,
-      color: 'text-green-600',
+      title: "Lead Management",
+      description: "Track and manage leads throughout the entire sales pipeline"
     },
     {
-      title: 'Revenue',
-      value: '$0',
-      description: 'Total revenue generated',
-      icon: DollarSign,
-      color: 'text-yellow-600',
+      icon: BarChart3,
+      title: "Analytics & Reports",
+      description: "Comprehensive analytics for field marketing performance"
     },
     {
-      title: 'Conversion Rate',
-      value: '0%',
-      description: 'Lead to deal conversion',
-      icon: TrendingUp,
-      color: 'text-purple-600',
-    },
-  ];
-
-  const quickActions = [
-    {
-      title: 'Add New Lead',
-      description: 'Capture a new business lead',
-      icon: Plus,
-      href: '/leads/new',
-      color: 'bg-blue-50 text-blue-600 border-blue-200',
+      icon: Users,
+      title: "Team Collaboration",
+      description: "Coordinate field agents and manage territories effectively"
     },
     {
-      title: 'Schedule Task',
-      description: 'Create a new task or appointment',
-      icon: Calendar,
-      href: '/tasks/new',
-      color: 'bg-green-50 text-green-600 border-green-200',
-    },
-    {
-      title: 'Daily Report',
-      description: 'Submit your daily field report',
-      icon: ClipboardList,
-      href: '/reports/daily',
-      color: 'bg-purple-50 text-purple-600 border-purple-200',
-    },
-    {
-      title: 'Log Expense',
-      description: 'Record a business expense',
-      icon: Receipt,
-      href: '/expenses/new',
-      color: 'bg-orange-50 text-orange-600 border-orange-200',
-    },
+      icon: MapPin,
+      title: "Field Tracking",
+      description: "GPS tracking and location-based performance monitoring"
+    }
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            Welcome back, {user?.user_metadata?.full_name || 'Agent'}!
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="container mx-auto px-6 py-16 text-center">
+          <h1 className="text-5xl font-bold text-foreground mb-6">
+            AstraMinds
           </h1>
-          <p className="text-muted-foreground">
-            Here's your field marketing dashboard overview
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Complete Field Marketing & Reporting Platform designed to streamline your sales operations, 
+            track performance, and maximize team productivity.
           </p>
+          <div className="flex gap-4 justify-center">
+            <Button size="lg" asChild>
+              <a href="/auth">Get Started</a>
+            </Button>
+            <Button variant="outline" size="lg">
+              Learn More
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {stat.title}
-                </CardTitle>
-                <Icon className={`h-4 w-4 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground">
-                  {stat.description}
-                </p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {/* Features Section */}
+      <div className="container mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground mb-4">
+            Powerful Features for Field Teams
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Everything you need to manage field marketing operations efficiently and drive results.
+          </p>
+        </div>
 
-      {/* Quick Actions */}
-      <div>
-        <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {quickActions.map((action) => {
-            const Icon = action.icon;
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
             return (
-              <Card key={action.title} className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card key={index} className="text-center">
                 <CardHeader>
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${action.color} mb-2`}>
-                    <Icon className="h-5 w-5" />
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Icon className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-sm">{action.title}</CardTitle>
-                  <CardDescription className="text-xs">
-                    {action.description}
-                  </CardDescription>
+                  <CardTitle className="text-lg">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" size="sm" asChild className="w-full">
-                    <Link to={action.href}>Get Started</Link>
-                  </Button>
+                  <CardDescription>{feature.description}</CardDescription>
                 </CardContent>
               </Card>
             );
@@ -143,39 +92,19 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Leads</CardTitle>
-            <CardDescription>
-              Your latest lead activities
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 text-muted-foreground">
-              <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p>No leads yet</p>
-              <p className="text-xs">Start by adding your first lead</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Tasks</CardTitle>
-            <CardDescription>
-              Your scheduled activities
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 text-muted-foreground">
-              <ClipboardList className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p>No tasks scheduled</p>
-              <p className="text-xs">Create your first task</p>
-            </div>
-          </CardContent>
-        </Card>
+      {/* CTA Section */}
+      <div className="bg-muted/50 py-16">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-foreground mb-4">
+            Ready to Transform Your Field Operations?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Join successful companies using AstraMinds to optimize their field marketing and drive growth.
+          </p>
+          <Button size="lg" asChild>
+            <a href="/auth">Start Your Journey</a>
+          </Button>
+        </div>
       </div>
     </div>
   );
